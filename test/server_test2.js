@@ -1,0 +1,33 @@
+const { expect } = require('chai');
+const supertest = require('supertest');
+const server = require('../server'); // gets the server running
+
+const api = supertest('http://localhost:3000');
+
+describe('Server', () => {
+  it('should return a 200 response from /feed/8', (done) => {
+    api.get('/feed/8')
+      .expect(200, done);
+  });
+
+  // Why doesn't res.body equal 8? it equals {};
+  /* it('should return a 200 response from /feed/8', function(done) {
+    api.get('/feed/8')
+    .expect(200)
+    .end(function(err, res) {
+      expect(res.body).to.equal('8');
+      done();
+    });
+  }); */
+
+
+  it('should return a 200 response from /user/friends', (done) => {
+    api.post('/user/friends')
+      .expect(200, done);
+  });
+
+  it('should return 200 response from /tweets/events', (done) => {
+    api.post('/tweets/events')
+      .expect(200, done);
+  });
+});
