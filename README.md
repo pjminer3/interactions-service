@@ -1,3 +1,5 @@
+### BUILD STATUS: https://travis-ci.org/pjminer3/interactions-service.svg?branch=master
+
 # THESIS
 
 > An OpenTable clone. Search for available reservations at restaurants across the US and book (or cancel) reservations online. Users receive text message confirmations of 
