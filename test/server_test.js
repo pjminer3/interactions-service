@@ -6,6 +6,8 @@ const server = require('../server/index.js');
 
 chai.use(chaiHttp);
 
+// will need to change these tests for my specific routes 
+
 describe('Server', () => {
   it ('should return 200 from /tweets/events', (done) => {
     chai.request(server)
