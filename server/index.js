@@ -25,6 +25,6 @@ app.post('/tweets/events', (req, res) => {
 });
 
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}!`));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}! Let's friggin do this!`));
 
 module.exports = app;
