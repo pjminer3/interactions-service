@@ -1,4 +1,4 @@
-### BUILD STATUS: https://travis-ci.org/pjminer3/interactions-service.svg?branch=master
+### BUILD STATUS: ![alt text](https://travis-ci.org/pjminer3/interactions-service.svg?branch=master)
 
 # THESIS
 
