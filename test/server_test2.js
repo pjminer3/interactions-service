@@ -30,4 +30,12 @@ describe('Server', () => {
     api.post('/tweets/events')
       .expect(200, done);
   });
+
+  it('should return 200 response from /tweets/events', (done) => {
+    api.post('/tweets/evesdfsnts')
+      .expect(200, done);
+  });
+  // this test should fail
+
+
 });
