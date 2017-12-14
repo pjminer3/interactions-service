@@ -20,14 +20,14 @@ CREATE TABLE interactions (
   intr_id uuid,
   user_id int,
   tweet_id varchar,
-  isAd boolean,
+  isad boolean,
   friendly_intr boolean,
   intr_time timestamp,
   PRIMARY KEY (intr_id)
 );
 
 ----------- COMMAND USED TO INSERT RECORD
-INSERT INTO interactions (intr_id, user_id, tweet_id, isAd, friendly_intr, intr_time)
+INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time)
   VALUES (**uuid**, **int**, **text**, **boolean**, **boolean**, **timestamp**)
 
 */
@@ -44,7 +44,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// route to get the 20 most recent tweets from the specified user
+// route to get the 5 most recent tweets from the specified user
 app.get('/feed/:user_id', (req, res) => {
   res.send(`${Path.parse(req.path).base}`); 
 });
@@ -104,17 +104,17 @@ function createSingleInsert() {
   const intr_id = generateIntrID(); // random interaction
   const user_id = generateUserID();
   const tweet_id = generateTweetID();
-  const isAd = tweetIsAd();
+  const isad = tweetIsAd();
   const friend_intr = friendlyInter(isAd);
   const time = generateTimestamp();
 
   return {
-    query: 'INSERT INTO interactions (intr_id, user_id, tweet_id, isAd, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)',
+    query: 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)',
     params: [
       intr_id, // intr_id
       user_id, // user_id
       tweet_id, // tweet_id
-      isAd, // isAd
+      isad, // isAd
       friend_intr, // friendly_intr
       time, // intr_time
     ],
