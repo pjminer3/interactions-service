@@ -70,17 +70,27 @@ function generateIntrID() {
 
 // generate random user_id (int)
 function generateUserID() {
-  return Math.round(Math.random() * 9999999999);
+  return Math.round(Math.random() * 999999999);
 }
 
 // genereate tweet_id (string)
 function generateTweetID() {
-  return randomstring(15);
+  return randomstring.generate(15);
 }
 
 // generate boolean
-function generateBoolean() {
-  return !!Math.round(Math.random());
+function tweetIsAd() {
+  const prob = Math.random();
+  return prob > 0.2 ? false : true;
+}
+
+// generate friendlyInteraction
+function friendlyInter(ad) {
+  const prob = Math.random();
+  if (ad) { // if tweet is an add, make it more likely it was prompted by a friend's interaction
+    return prob > 0.5; // if the interaction belongs to an ad (20% of cases), then make 50% of them friend-inspired interactions
+  }
+  return prob > 0.8;
 }
 
 // generate random timestamp
@@ -91,20 +101,32 @@ function generateTimestamp() {
 }
 
 function createSingleInsert() {
+  const intr_id = generateIntrID(); // random interaction
+  const user_id = generateUserID();
+  const tweet_id = generateTweetID();
+  const isAd = tweetIsAd();
+  const friend_intr = friendlyInter(isAd);
+  const time = generateTimestamp();
+
   return {
     query: 'INSERT INTO interactions (intr_id, user_id, tweet_id, isAd, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)',
-    params: [ 
-      generateIntrID(), // intr_id
-      generateUserID(), // user_id
-      generateTweetID(), // tweet_id
-      generateBoolean(), // isAd
-      generateBoolean(), // friendly_intr
-      generateTimestamp(), // intr_time
+    params: [
+      intr_id, // intr_id
+      user_id, // user_id
+      tweet_id, // tweet_id
+      isAd, // isAd
+      friend_intr, // friendly_intr
+      time, // intr_time
     ],
   };
 }
 
+let batchNumber = 1
+
 function createBatchInsert() {
+  console.log('Data records: ', batchNumber * 50);
+  batchNumber += 1;
+
   const queries = [];
 
   for (let i = 0; i < 50; i++) {
@@ -114,16 +136,21 @@ function createBatchInsert() {
   return queries;
 }
 
-function createOneMillionEntries() {
-  for (let i = 0; i < 20000; i++) {
-    client.batch(createBatchInsert(), { prepare: true })
-      .then((result) => {
-        console.log('Batch created');
-      });
+function createOneMillionEntries(int = 0) {
+  if (int === 200000) {
+    console.log('Creation complete');
+    return;
   }
+  client.batch(createBatchInsert(), { prepare: true })
+    .then(() => {
+      createOneMillionEntries(int + 1);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
-// createOneMillionEntries();
+// createOneMillionEntries(0);
 
 
 module.exports = app;
