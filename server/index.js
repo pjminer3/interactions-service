@@ -150,6 +150,7 @@ function createOneMillionEntries(int = 0) {
     });
 }
 
+// uncomment the below line to generate the data
 // createOneMillionEntries(0);
 
 
