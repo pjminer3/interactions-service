@@ -17,8 +17,6 @@ dotenv.config();
 
 const client = new cassandra.Client({ contactPoints: ['127.0.0.1:9042'], keyspace: 'pjm' });
 
-// generate data here
-
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -27,13 +25,33 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // generate random user to login
-
+function getRandomUser() {
+  return Math.round(Math.random() * 10000000);
+}
 
 // axios request to Feed service
-axios.get()
+// submits a feed request for a random user
+function getFeed() {
+  axios.get(`/feed/${getRandomUser()}`)
+    .then((response) => {
+      /* 
+      response.body 
+      { user_id: 23432,
+      tweets: [
+        { tweet_id: string, isad: boolean },
+        ... ,
+        ... ,
+      ]}
+      */
+
+    })
+    .catch((err) => {
+      console.log('Feed request failed: ', err);
+    });
+}
 
 // axios request to Social Graph service
-
+axios.get('/user/')
 
 // axios request to Tweet service
 
@@ -186,4 +204,5 @@ function createOneMillionEntries(int = 0) {
 // createOneMillionEntries(0);
 
 
-module.exports = app;
+module.exports.app = app;
+module.exports.client = client;

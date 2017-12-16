@@ -8,7 +8,7 @@ const addUserToRes = (request, response, next) => {
     ]
   } */
 
-  const user = request.body.user_id;
+  const user = response.body.user_id;
 
   response.user = user;
   next();
