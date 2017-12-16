@@ -1,15 +1,9 @@
-import cassandra from 'cassandra-driver';
-import uuidv4 from 'uuid/v4';
+const uuidv4 = require('uuid/v4');
 
-import { client } from './../index';
+const { client } = require('./../index');
+const postIntsToTweets = require('./postIntsToTweets');
 
-/*
------------ COMMAND USED TO INSERT RECORD
-INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time)
-  VALUES (**uuid**, **int**, **text**, **boolean**, **boolean**, **timestamp**)
-
-*/
-
+// function for generating random interaction UUID
 function generateIntrID() {
   return uuidv4();
 }
@@ -21,19 +15,26 @@ function generateTimestamp() {
   return currentTime + Math.round(Math.random() * threeMonths);
 }
 
-
+// function to add a new record to the cassandra DB using once provided with a:
+// userID, tweetID, isAd boolean, and friendly boolean
 const addIntsToDB = (userId, tweetId, isAd, friendly) => {
   const intrId = generateIntrID();
   const intrTime = generateTimestamp();
 
-  const query = 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)'; 
+  const query = 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)';
   const params = [intrId, userId, tweetId, isAd, friendly, intrTime];
 
   client.execute(query, params, { prepare: true })
     .then((result) => {
       console.log('Row updated: ', result);
+      postIntsToTweets(userId, tweetId);
+    })
+    .catch((err) => {
+      console.log('Error with adding record to DB');
     });
 };
 
-export default addIntsToDB;
+addIntsToDB(123, 'test', true, true);
+
+module.exports = addIntsToDB;
 

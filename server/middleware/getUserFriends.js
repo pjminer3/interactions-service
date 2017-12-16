@@ -11,15 +11,15 @@ const app = require('./../index');
   } 
   */
 
-const getUserFriends = (request, response, next) => {
-  // send get request to Aygerim's service
-    // cycle through each tweet ID and create a request
-  const { tweets } = response.body;
-  for (let i = 0; i < tweets.length; i++) {
-    app.get(`/user/${response.user}/${tweets[i]}`, (request, response) {
-      re
-    })
-  }
-};
+// const getUserFriends = (request, response, next) => {
+//   // send get request to Aygerim's service
+//     // cycle through each tweet ID and create a request
+//   const { tweets } = response.body;
+//   for (let i = 0; i < tweets.length; i++) {
+//     app.get(`/user/${response.user}/${tweets[i]}`, (request, response) {
+//       re
+//     })
+//   }
+// };
 
-export default getUserFriends;
+// export default getUserFriends;

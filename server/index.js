@@ -5,14 +5,13 @@ const Path = require('path');
 const dotenv = require('dotenv');
 const cassandra = require('cassandra-driver');
 
-const addUserToRes = require('./middleware/addUserToRes');
+// const addUserToRes = require('./middleware/addUserToRes');
 
 // data generation
 const uuidv4 = require('uuid/v4');
 const randomstring = require('randomstring');
 
 dotenv.config();
-
 
 
 const client = new cassandra.Client({ contactPoints: ['127.0.0.1:9042'], keyspace: 'pjm' });
@@ -29,60 +28,20 @@ function getRandomUser() {
   return Math.round(Math.random() * 10000000);
 }
 
-// axios request to Feed service
-// submits a feed request for a random user
-function getFeed() {
-  axios.get(`/feed/${getRandomUser()}`)
-    .then((response) => {
-      /* 
-      response.body 
-      { user_id: 23432,
-      tweets: [
-        { tweet_id: string, isad: boolean },
-        ... ,
-        ... ,
-      ]}
-      */
+// the below endpoint is for testing purposes only
+app.post('/tweets/events', (request, response) => {
+  console.log('succes');
+  response.json();
+});
 
-    })
-    .catch((err) => {
-      console.log('Feed request failed: ', err);
-    });
-}
+// axios request to Feed service
 
 // axios request to Social Graph service
-axios.get('/user/')
 
 // axios request to Tweet service
 
 
 // add record to database
-
-
-// -------------------------- BAD DATA BELOW ------------------------------
-// // route to get the 5 most recent tweets from the specified user
-// app.get('/feed/:user_id', addUserToRes, (request, response) => {
-//   // addUserToRes
-//   // getUserFriends (the below post request to Aygerim's service, add friends list to response object)
-//     // this will create a new individual request for each tweet
-//   response.send('GET was successful');
-// });
-
-// // route to get a boolean from Aygerim's Social Graph Service
-// app.get('/user/friends', (request, response) => {
-//     // generate random Interactions
-//     // trigger post request to nick with interactions data
-//   // put interactions in database
-//   response.send(true);
-// });
-
-// // route to post events to tt database
-// app.post('/tweets/events', (request, response) => {
-//   response.send();
-// });
-
-// -------------------------- BAD DATA ABOVE ------------------------------
-
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}! Let's friggin do this!`));
 
