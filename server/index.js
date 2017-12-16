@@ -1,14 +1,76 @@
+const axios = require('axios');
 const express = require('express');
 const bodyParser = require('body-parser');
 const Path = require('path');
 const dotenv = require('dotenv');
 const cassandra = require('cassandra-driver');
 
+const addUserToRes = require('./middleware/addUserToRes');
+
 // data generation
 const uuidv4 = require('uuid/v4');
 const randomstring = require('randomstring');
 
 dotenv.config();
+
+
+
+const client = new cassandra.Client({ contactPoints: ['127.0.0.1:9042'], keyspace: 'pjm' });
+
+// generate data here
+
+
+const PORT = process.env.PORT || 3000;
+const app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// generate random user to login
+
+
+// axios request to Feed service
+axios.get()
+
+// axios request to Social Graph service
+
+
+// axios request to Tweet service
+
+
+// add record to database
+
+
+// -------------------------- BAD DATA BELOW ------------------------------
+// // route to get the 5 most recent tweets from the specified user
+// app.get('/feed/:user_id', addUserToRes, (request, response) => {
+//   // addUserToRes
+//   // getUserFriends (the below post request to Aygerim's service, add friends list to response object)
+//     // this will create a new individual request for each tweet
+//   response.send('GET was successful');
+// });
+
+// // route to get a boolean from Aygerim's Social Graph Service
+// app.get('/user/friends', (request, response) => {
+//     // generate random Interactions
+//     // trigger post request to nick with interactions data
+//   // put interactions in database
+//   response.send(true);
+// });
+
+// // route to post events to tt database
+// app.post('/tweets/events', (request, response) => {
+//   response.send();
+// });
+
+// -------------------------- BAD DATA ABOVE ------------------------------
+
+
+app.listen(PORT, () => console.log(`Listening on port ${PORT}! Let's friggin do this!`));
+
+
+/* -------------------- DATA GENERATION ---------------------- */
+
 
 /*
 ----------- COMMAND USED TO CREATE KEYSPACE (DATABASE)
@@ -31,36 +93,6 @@ INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_
   VALUES (**uuid**, **int**, **text**, **boolean**, **boolean**, **timestamp**)
 
 */
-
-const client = new cassandra.Client({ contactPoints: ['127.0.0.1:9042'], keyspace: 'pjm' });
-
-// generate data here
-
-
-const PORT = process.env.PORT || 3000;
-const app = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
-// route to get the 5 most recent tweets from the specified user
-app.get('/feed/:user_id', (req, res) => {
-  res.send(`${Path.parse(req.path).base}`); 
-});
-
-// route to get a boolean from Aygerim's Social Graph Service
-app.post('/user/friends', (req, res) => {
-  res.send(true);
-});
-
-// route to post events to tweet database
-app.post('/tweets/events', (req, res) => {
-  res.send();
-});
-
-
-app.listen(PORT, () => console.log(`Listening on port ${PORT}! Let's friggin do this!`));
 
 
 // generate random intr_id (uuid)
