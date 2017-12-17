@@ -52,8 +52,8 @@ app.get('/feed/:userId', (request, response) => {
     tweets: [
       { tweet_id: 1, isad: false },
       { tweet_id: 2, isad: true },
-      { tweet_id: 3, isad: false },
-      { tweet_id: 4, isad: true },
+      { tweet_id: 3, isad: true },
+      { tweet_id: 4, isad: false },
       { tweet_id: 5, isad: false },
     ],
   });
@@ -181,5 +181,4 @@ function createOneMillionEntries(int = 0) {
 
 module.exports.app = app;
 
-
-// getFeed();
+// setInterval(getFeed, 5000);
