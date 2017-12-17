@@ -8,7 +8,7 @@ const getFeed = () => {
     return Math.round(Math.random() * 10000000);
   };
 
-  const user = 666; // getRandomUser();
+  const user = getRandomUser();
 
   axios.get(`http://127.0.0.1:3000/feed/${user}`)
     .then((response) => {
@@ -16,16 +16,16 @@ const getFeed = () => {
       const { tweets } = response.data;
       const tweetCount = tweets.length;
 
+      // recursive function to create calls to Aygerim's service
       function createRequests(tweets, idx = 0) {
         if (idx >= tweetCount) {
           return;
         }
-
         getFriendlyBoolean(response.data.user_id, tweets[idx].tweet_id, tweets[idx].isad);
-
         createRequests(tweets, idx + 1);
       }
 
+      // call to create all requests to aygerim's service
       createRequests(tweets);
     })
     .catch((err) => {

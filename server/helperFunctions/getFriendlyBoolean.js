@@ -10,15 +10,11 @@ const getFriendlyBoolean = (userId, tweetId, isAd) => {
     },
   }) // TODO: change this to Aygerim's actual service
     .then((response) => {
-      console.log('------------------ this is response for Friendly_intr: ', response.data); // response.data is how you get what send in a json response
-      console.log('------------------ this is response.data type for Friendly_intr: ', typeof response.data); // came back as a boolean
-      generateInteraction(userId, tweetId, isAd, response.data); // TODO: double check with Aygerim that this is how her reponse object is going to be organized
+      generateInteraction(userId, tweetId, isAd, response.data); 
     })
     .catch((err) => {
       console.log('There was an error retreiving friend boolean: ', err);
     });
 };
-
-// getFriendlyBoolean(333, 'three three three', true); // successfully creates database interactions
 
 module.exports = getFriendlyBoolean;
