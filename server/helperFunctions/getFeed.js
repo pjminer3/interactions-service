@@ -6,7 +6,7 @@ const getFeed = () => {
   // generate random user to login
   function getRandomUser() {
     return Math.round(Math.random() * 10000000);
-  };
+  }
 
   const user = getRandomUser();
 
@@ -33,7 +33,5 @@ const getFeed = () => {
       console.log(err);
     });
 };
-
-getFeed();
 
 module.exports = getFeed;

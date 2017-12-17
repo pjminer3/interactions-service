@@ -5,14 +5,27 @@ const path = require('path');
 const dotenv = require('dotenv');
 const cassandra = require('cassandra-driver');
 
+
+// --------- SETTING UP AND EXPORTING DATABASE REQUIRED UP HERE ----------
+const client = new cassandra.Client({ contactPoints: ['127.0.0.1:9042'], keyspace: 'pjm' });
+
+client.connect((err) => {
+  if (err) {
+    console.log('There was an error connecting to database');
+  } else {
+    console.log('Successfully connected to database');
+  }
+});
+
+module.exports.client = client;
+//------------------------------------------------------------------------
+
 // data generation
 const uuidv4 = require('uuid/v4');
 const randomstring = require('randomstring');
+const getFeed = require('./helperFunctions/getFeed');
 
 dotenv.config();
-
-
-const client = new cassandra.Client({ contactPoints: ['127.0.0.1:9042'], keyspace: 'pjm' });
 
 
 const PORT = process.env.PORT || 3000;
@@ -167,4 +180,6 @@ function createOneMillionEntries(int = 0) {
 
 
 module.exports.app = app;
-module.exports.client = client;
+
+
+// getFeed();

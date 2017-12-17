@@ -10,7 +10,7 @@ const getFriendlyBoolean = (userId, tweetId, isAd) => {
     },
   }) // TODO: change this to Aygerim's actual service
     .then((response) => {
-      generateInteraction(userId, tweetId, isAd, response.data); 
+      generateInteraction(userId, tweetId, isAd, response.data);
     })
     .catch((err) => {
       console.log('There was an error retreiving friend boolean: ', err);
