@@ -1,7 +1,7 @@
 const axios = require('axios');
 const express = require('express');
 const bodyParser = require('body-parser');
-const Path = require('path');
+const path = require('path');
 const dotenv = require('dotenv');
 const cassandra = require('cassandra-driver');
 
@@ -23,16 +23,33 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// generate random user to login
-function getRandomUser() {
-  return Math.round(Math.random() * 10000000);
-}
-
-// the below endpoint is for testing purposes only
+// --------------------- the below endpoints are for testing purposes only ------------------------------
 app.post('/tweets/events', (request, response) => {
-  console.log('succes');
+  console.log('Post to tweets successful');
   response.json();
 });
+
+app.get('/user', (request, response) => {
+  console.log('Get to /user successful');
+  response.json(false); // TODO: change this so it's not always false
+});
+
+app.get('/feed/:userId', (request, response) => {
+  console.log('------------------- request.params: ', request.params);
+  response.json({
+    user_id: request.params.userId,
+    tweets: [
+      { tweet_id: '1', isad: false },
+      { tweet_id: '2', isad: true },
+      { tweet_id: '3', isad: false },
+      { tweet_id: '4', isad: true },
+      { tweet_id: '5', isad: false },
+    ],
+  });
+});
+
+
+// -------------------------------------------------------------------------------------------------------
 
 // axios request to Feed service
 
@@ -47,8 +64,6 @@ app.listen(PORT, () => console.log(`Listening on port ${PORT}! Let's friggin do 
 
 
 /* -------------------- DATA GENERATION ---------------------- */
-
-
 /*
 ----------- COMMAND USED TO CREATE KEYSPACE (DATABASE)
 CREATE KEYSPACE pjm

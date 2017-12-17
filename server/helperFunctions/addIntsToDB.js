@@ -26,15 +26,13 @@ const addIntsToDB = (userId, tweetId, isAd, friendly) => {
 
   client.execute(query, params, { prepare: true })
     .then((result) => {
-      console.log('Row updated: ', result);
+      console.log('Row updated in cassandra');
       postIntsToTweets(userId, tweetId);
     })
     .catch((err) => {
-      console.log('Error with adding record to DB');
+      console.log('Error with adding record to DB: ', err);
     });
 };
-
-addIntsToDB(123, 'test', true, true);
 
 module.exports = addIntsToDB;
 
