@@ -1,13 +1,9 @@
 const axios = require('axios');
 
 const getFriendlyBoolean = require('./getFriendlyBoolean');
+const getRandomUser = require('./getRandomUser');
 
 const getFeed = () => {
-  // generate random user to login
-  function getRandomUser() {
-    return Math.round(Math.random() * 10000000);
-  }
-
   const user = getRandomUser();
 
   axios.get(`http://127.0.0.1:3000/feed/${user}`)
@@ -35,3 +31,7 @@ const getFeed = () => {
 };
 
 module.exports = getFeed;
+
+// TODO: modularize helper functions
+// TODO: use map to create the requests instead of idx 
+// create a promise.all for the mapped requests

@@ -72,7 +72,7 @@ function generateUserID() {
 }
 
 function generateTweetID() {
-  return Math.round(Math.random() * 999999999);
+  return randomstring.generate(10);
 }
 
 function tweetIsAd() {
@@ -107,7 +107,7 @@ app.post('/testinput', (request, response) => {
 
   const intrId = generateIntrID();
   const userId = 2342432;
-  const tweetId = 723947;
+  const tweetId = '723947';
   const isAd = true;
   const friendly = false;
   const intrTime = '2018-01-17 13:09:01.969000+0000';
@@ -131,28 +131,28 @@ app.listen(PORT, () => console.log(`Listening on port ${PORT}! Let's friggin do 
 
 module.exports.app = app;
 
-// /* -------------------- DATA GENERATION BELOW ---------------------- */
-// /*
-// ----------- COMMAND USED TO CREATE KEYSPACE (DATABASE)
-// CREATE KEYSPACE pjm
-//   WITH REPLICATION = { 'class': 'SimplyStrategy', 'replication_factor': 3 }
+/* -------------------- DATA GENERATION BELOW ---------------------- */
+/*
+----------- COMMAND USED TO CREATE KEYSPACE (DATABASE)
+CREATE KEYSPACE pjm
+  WITH REPLICATION = { 'class': 'SimplyStrategy', 'replication_factor': 3 }
 
-// ----------- COMMAND USED TO CREATE TABLE (INTERACTIONS)
-// CREATE TABLE interactions (
-//   intr_id uuid,
-//   user_id int,
-//   tweet_id int,
-//   isad boolean,
-//   friendly_intr boolean,
-//   intr_time timestamp,
-//   PRIMARY KEY (intr_id)
-// );
+----------- COMMAND USED TO CREATE TABLE (INTERACTIONS)
+CREATE TABLE interactions (
+  intr_id uuid,
+  user_id int,
+  tweet_id varchar,
+  isad boolean,
+  friendly_intr boolean,
+  intr_time timestamp,
+  PRIMARY KEY (intr_id)s
+);
 
-// ----------- COMMAND USED TO INSERT RECORD
-// INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time)
-//   VALUES (**uuid**, **int**, **text**, **boolean**, **boolean**, **timestamp**)
+----------- COMMAND USED TO INSERT RECORD
+INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time)
+  VALUES (**uuid**, **int**, **text**, **boolean**, **boolean**, **timestamp**)
 
-// */
+*/
 
 
 // // generate random intr_id (uuid)
@@ -167,7 +167,7 @@ module.exports.app = app;
 
 // // genereate tweet_id (string)
 // function generateTweetID() {
-//   return Math.round(Math.random() * 999999999);
+//   return randomstring.generate(10);
 // }
 
 // // generate boolean
@@ -242,7 +242,7 @@ module.exports.app = app;
 //     });
 // }
 
-// // // // uncomment the below line to generate the data
-// // createOneMillionEntries(0);
+// // // // // // uncomment the below line to generate the data
+// createOneMillionEntries(0);
 
 // setInterval(getFeed, 5000);
