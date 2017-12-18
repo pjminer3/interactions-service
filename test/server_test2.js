@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const supertest = require('supertest');
-const server = require('../server'); // gets the server running
+const { app } = require('../server'); // gets the server running
 
 const api = supertest('http://localhost:3000');
 

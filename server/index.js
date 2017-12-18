@@ -1,3 +1,6 @@
+// setup newrelic 
+const nr = require('newrelic');
+
 const axios = require('axios');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -23,7 +26,6 @@ module.exports.client = client;
 // data generation
 const uuidv4 = require('uuid/v4');
 const randomstring = require('randomstring');
-const getFeed = require('./helperFunctions/getFeed');
 
 dotenv.config();
 
@@ -59,57 +61,25 @@ app.get('/feed/:userId', (request, response) => {
   });
 });
 
-// ------------------------------------------------------------------------------------------------
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}! Let's friggin do this!`));
-
-
-/* -------------------- DATA GENERATION ---------------------- */
-/*
------------ COMMAND USED TO CREATE KEYSPACE (DATABASE)
-CREATE KEYSPACE pjm
-  WITH REPLICATION = { 'class': 'SimplyStrategy', 'replication_factor': 3 }
-
------------ COMMAND USED TO CREATE TABLE (INTERACTIONS)
-CREATE TABLE interactions (
-  intr_id uuid,
-  user_id int,
-  tweet_id int,
-  isad boolean,
-  friendly_intr boolean,
-  intr_time timestamp,
-  PRIMARY KEY (intr_id)
-);
-
------------ COMMAND USED TO INSERT RECORD
-INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time)
-  VALUES (**uuid**, **int**, **text**, **boolean**, **boolean**, **timestamp**)
-
-*/
-
-
-// generate random intr_id (uuid)
+// all for use in the below 'post' endpoing
 function generateIntrID() {
   return uuidv4();
 }
 
-// generate random user_id (int)
 function generateUserID() {
   return Math.round(Math.random() * 999999999);
 }
 
-// genereate tweet_id (string)
 function generateTweetID() {
-  return randomstring.generate(15);
+  return Math.round(Math.random() * 999999999);
 }
 
-// generate boolean
 function tweetIsAd() {
   const prob = Math.random();
   return prob > 0.2 ? false : true;
 }
 
-// generate friendlyInteraction
 function friendlyInter(ad) {
   const prob = Math.random();
   if (ad) { // if tweet is an add, make it more likely it was prompted by a friend's interaction
@@ -118,67 +88,161 @@ function friendlyInter(ad) {
   return prob > 0.8;
 }
 
-// generate random timestamp
 function generateTimestamp() {
   let currentTime = 1513196237428;
   let threeMonths = 7776000000;
   return currentTime + Math.round(Math.random() * threeMonths);
 }
 
-function createSingleInsert() {
-  const intr_id = generateIntrID(); // random interaction
-  const user_id = generateUserID();
-  const tweet_id = generateTweetID();
-  const isad = tweetIsAd();
-  const friend_intr = friendlyInter(isAd);
-  const time = generateTimestamp();
+app.post('/testinput', (request, response) => {
+  const query = 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)';
 
-  return {
-    query: 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)',
-    params: [
-      intr_id, // intr_id
-      user_id, // user_id
-      tweet_id, // tweet_id
-      isad, // isAd
-      friend_intr, // friendly_intr
-      time, // intr_time
-    ],
-  };
-}
+  // const intrId = generateIntrID();
+  // const userId = generateUserID();
+  // const tweetId = generateTweetID();
+  // const isAd = tweetIsAd();
+  // const friendly = friendlyInter();
+  // const intrTime = generateTimestamp();
 
-let batchNumber = 1
 
-function createBatchInsert() {
-  console.log('Data records: ', batchNumber * 50);
-  batchNumber += 1;
+  const intrId = generateIntrID();
+  const userId = 2342432;
+  const tweetId = 723947;
+  const isAd = true;
+  const friendly = false;
+  const intrTime = '2018-01-17 13:09:01.969000+0000';
 
-  const queries = [];
+  const params = [intrId, userId, tweetId, isAd, friendly, intrTime];
 
-  for (let i = 0; i < 50; i++) {
-    queries.push(createSingleInsert());
-  }
-
-  return queries;
-}
-
-function createOneMillionEntries(int = 0) {
-  if (int === 200000) {
-    console.log('Creation complete');
-    return;
-  }
-  client.batch(createBatchInsert(), { prepare: true })
-    .then(() => {
-      createOneMillionEntries(int + 1);
+  client.execute(query, params, { prepare: true })
+    .then((result) => {
+      console.log('Row updated in cassandra');
+      response.json();
     })
     .catch((err) => {
-      console.log(err);
+      console.log('Error with adding record to DB: ', err);
+      response.json();
     });
-}
+});
 
-// uncomment the below line to generate the data
-// createOneMillionEntries(0);
+// -------------------------- END OF TESTING PORTION CODE -----------------------------------------
 
+app.listen(PORT, () => console.log(`Listening on port ${PORT}! Let's friggin do this!`));
 
 module.exports.app = app;
+
+// /* -------------------- DATA GENERATION BELOW ---------------------- */
+// /*
+// ----------- COMMAND USED TO CREATE KEYSPACE (DATABASE)
+// CREATE KEYSPACE pjm
+//   WITH REPLICATION = { 'class': 'SimplyStrategy', 'replication_factor': 3 }
+
+// ----------- COMMAND USED TO CREATE TABLE (INTERACTIONS)
+// CREATE TABLE interactions (
+//   intr_id uuid,
+//   user_id int,
+//   tweet_id int,
+//   isad boolean,
+//   friendly_intr boolean,
+//   intr_time timestamp,
+//   PRIMARY KEY (intr_id)
+// );
+
+// ----------- COMMAND USED TO INSERT RECORD
+// INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time)
+//   VALUES (**uuid**, **int**, **text**, **boolean**, **boolean**, **timestamp**)
+
+// */
+
+
+// // generate random intr_id (uuid)
+// function generateIntrID() {
+//   return uuidv4();
+// }
+
+// // generate random user_id (int)
+// function generateUserID() {
+//   return Math.round(Math.random() * 999999999);
+// }
+
+// // genereate tweet_id (string)
+// function generateTweetID() {
+//   return Math.round(Math.random() * 999999999);
+// }
+
+// // generate boolean
+// function tweetIsAd() {
+//   const prob = Math.random();
+//   return prob > 0.2 ? false : true;
+// }
+
+// // generate friendlyInteraction
+// function friendlyInter(ad) {
+//   const prob = Math.random();
+//   if (ad) { // if tweet is an add, make it more likely it was prompted by a friend's interaction
+//     return prob > 0.5; // if the interaction belongs to an ad (20% of cases), then make 50% of them friend-inspired interactions
+//   }
+//   return prob > 0.8;
+// }
+
+// // generate random timestamp
+// function generateTimestamp() {
+//   let currentTime = 1513196237428;
+//   let threeMonths = 7776000000;
+//   return currentTime + Math.round(Math.random() * threeMonths);
+// }
+
+// function createSingleInsert() {
+//   const intr_id = generateIntrID(); // random interaction
+//   const user_id = generateUserID();
+//   const tweet_id = generateTweetID();
+//   const isad = tweetIsAd();
+//   const friend_intr = friendlyInter(isad);
+//   const time = generateTimestamp();
+
+//   return {
+//     query: 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)',
+//     params: [
+//       intr_id, // intr_id
+//       user_id, // user_id
+//       tweet_id, // tweet_id
+//       isad, // isAd
+//       friend_intr, // friendly_intr
+//       time, // intr_time
+//     ],
+//   };
+// }
+
+// let batchNumber = 1
+
+// function createBatchInsert() {
+//   console.log('Data records: ', batchNumber * 50);
+//   batchNumber += 1;
+
+//   const queries = [];
+
+//   for (let i = 0; i < 50; i++) {
+//     queries.push(createSingleInsert());
+//   }
+
+//   return queries;
+// }
+
+// function createOneMillionEntries(int = 0) {
+//   if (int === 200000) {
+//     console.log('Creation complete');
+//     return;
+//   }
+//   client.batch(createBatchInsert(), { prepare: true })
+//     .then(() => {
+//       createOneMillionEntries(int + 1);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// }
+
+// // // // uncomment the below line to generate the data
+// // createOneMillionEntries(0);
 
 // setInterval(getFeed, 5000);
