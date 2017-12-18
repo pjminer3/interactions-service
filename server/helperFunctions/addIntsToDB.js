@@ -3,17 +3,7 @@ const uuidv4 = require('uuid/v4');
 const { client } = require('./../index');
 const postIntsToTweets = require('./postIntsToTweets');
 
-// function for generating random interaction UUID
-function generateIntrID() {
-  return uuidv4();
-}
-
-// generate random timestamp
-function generateTimestamp() {
-  const currentTime = 1513196237428;
-  const threeMonths = 7776000000;
-  return currentTime + Math.round(Math.random() * threeMonths);
-}
+const { generateIntrID, generateTimestamp } = require('./dataGeneration');
 
 // function to add a new record to the cassandra DB using once provided with a:
 // userID, tweetID, isAd boolean, and friendly boolean

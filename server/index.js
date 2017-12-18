@@ -8,6 +8,10 @@ const path = require('path');
 const dotenv = require('dotenv');
 const cassandra = require('cassandra-driver');
 
+const dataGeneration = require('./helperFunctions/dataGeneration');
+
+const getFeed = require('./helperFunctions/getFeed');
+
 
 // --------- SETTING UP AND EXPORTING DATABASE REQUIRED UP HERE ----------
 const client = new cassandra.Client({ contactPoints: ['127.0.0.1:9042'], keyspace: 'pjm' });
@@ -22,10 +26,6 @@ client.connect((err) => {
 
 module.exports.client = client;
 //------------------------------------------------------------------------
-
-// data generation
-const uuidv4 = require('uuid/v4');
-const randomstring = require('randomstring');
 
 dotenv.config();
 
@@ -62,50 +62,10 @@ app.get('/feed/:userId', (request, response) => {
 });
 
 
-// all for use in the below 'post' endpoing
-function generateIntrID() {
-  return uuidv4();
-}
-
-function generateUserID() {
-  return Math.round(Math.random() * 999999999);
-}
-
-function generateTweetID() {
-  return randomstring.generate(10);
-}
-
-function tweetIsAd() {
-  const prob = Math.random();
-  return prob > 0.2 ? false : true;
-}
-
-function friendlyInter(ad) {
-  const prob = Math.random();
-  if (ad) { // if tweet is an add, make it more likely it was prompted by a friend's interaction
-    return prob > 0.5; // if the interaction belongs to an ad (20% of cases), then make 50% of them friend-inspired interactions
-  }
-  return prob > 0.8;
-}
-
-function generateTimestamp() {
-  let currentTime = 1513196237428;
-  let threeMonths = 7776000000;
-  return currentTime + Math.round(Math.random() * threeMonths);
-}
-
 app.post('/testinput', (request, response) => {
   const query = 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)';
 
-  // const intrId = generateIntrID();
-  // const userId = generateUserID();
-  // const tweetId = generateTweetID();
-  // const isAd = tweetIsAd();
-  // const friendly = friendlyInter();
-  // const intrTime = generateTimestamp();
-
-
-  const intrId = generateIntrID();
+  const intrId = dataGeneration.generateIntrID();
   const userId = 2342432;
   const tweetId = '723947';
   const isAd = true;
@@ -131,6 +91,7 @@ app.listen(PORT, () => console.log(`Listening on port ${PORT}! Let's friggin do 
 
 module.exports.app = app;
 
+
 /* -------------------- DATA GENERATION BELOW ---------------------- */
 /*
 ----------- COMMAND USED TO CREATE KEYSPACE (DATABASE)
@@ -154,51 +115,13 @@ INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_
 
 */
 
-
-// // generate random intr_id (uuid)
-// function generateIntrID() {
-//   return uuidv4();
-// }
-
-// // generate random user_id (int)
-// function generateUserID() {
-//   return Math.round(Math.random() * 999999999);
-// }
-
-// // genereate tweet_id (string)
-// function generateTweetID() {
-//   return randomstring.generate(10);
-// }
-
-// // generate boolean
-// function tweetIsAd() {
-//   const prob = Math.random();
-//   return prob > 0.2 ? false : true;
-// }
-
-// // generate friendlyInteraction
-// function friendlyInter(ad) {
-//   const prob = Math.random();
-//   if (ad) { // if tweet is an add, make it more likely it was prompted by a friend's interaction
-//     return prob > 0.5; // if the interaction belongs to an ad (20% of cases), then make 50% of them friend-inspired interactions
-//   }
-//   return prob > 0.8;
-// }
-
-// // generate random timestamp
-// function generateTimestamp() {
-//   let currentTime = 1513196237428;
-//   let threeMonths = 7776000000;
-//   return currentTime + Math.round(Math.random() * threeMonths);
-// }
-
 // function createSingleInsert() {
-//   const intr_id = generateIntrID(); // random interaction
-//   const user_id = generateUserID();
-//   const tweet_id = generateTweetID();
-//   const isad = tweetIsAd();
-//   const friend_intr = friendlyInter(isad);
-//   const time = generateTimestamp();
+//   const intr_id = dataGeneration.generateIntrID(); // random interaction
+//   const user_id = dataGeneration.generateUserID();
+//   const tweet_id = dataGeneration.generateTweetID();
+//   const isad = dataGeneration.tweetIsAd();
+//   const friend_intr = dataGeneration.friendlyInter(isad);
+//   const time = dataGeneration.generateTimestamp();
 
 //   return {
 //     query: 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)',
