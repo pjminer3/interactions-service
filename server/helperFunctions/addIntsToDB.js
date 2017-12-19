@@ -1,6 +1,4 @@
-const uuidv4 = require('uuid/v4');
-
-const { client } = require('./../index');
+const { client } = require('./../../database/index');
 const postIntsToTweets = require('./postIntsToTweets');
 
 const { generateIntrID, generateTimestamp } = require('./dataGeneration');
@@ -14,10 +12,10 @@ const addIntsToDB = (userId, tweetId, isAd, friendly) => {
   const query = 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)';
   const params = [intrId, userId, tweetId, isAd, friendly, intrTime];
 
-  client.execute(query, params, { prepare: true })
+  return client.execute(query, params, { prepare: true })
     .then((result) => {
       console.log('Row updated in cassandra');
-      postIntsToTweets(userId, tweetId);
+      return postIntsToTweets(userId, tweetId);
     })
     .catch((err) => {
       console.log('Error with adding record to DB: ', err);

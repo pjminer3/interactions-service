@@ -1,6 +1,6 @@
 const cassandra = require('cassandra-driver');
 
-const { client } = require('./../server/index');
+const { client } = require('./index');
 const dataGeneration = require('./../server/helperFunctions/dataGeneration');
 
 /* -------------------- DATA GENERATION BELOW ---------------------- */
@@ -77,4 +77,4 @@ function createOneMillionEntries(int = 0) {
 }
 
 // uncomment the below line to generate the data
-createOneMillionEntries(0);
+// createOneMillionEntries(0);
