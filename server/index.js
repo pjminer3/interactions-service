@@ -49,7 +49,7 @@ app.post('/testinput', (request, response) => {
     })
     .catch((err) => {
       response.json();
-    }); 
+    });
 });
 
 // -------------------------- END OF TESTING PORTION CODE -----------------------------------------
