@@ -3,6 +3,7 @@ const generateInteraction = require('./generateInteraction');
 
 // recursive function to create calls to Aygerim's service
 module.exports = function createFriendQueryRequest(response, tweets) {
+  // ---- THE BELOW IS AN OLD WAY THAT SENDS 1 REQUEST PER TWEET TO SOCIAL GRAPH SERVICE ----
   // returns an iterable array of request promises to Social Graph Service
   return Promise.all(tweets.map((tweet) => {
     return getFriendlyBoolean(response.data.user_id, tweet.tweet_id, tweet.isad)
@@ -14,4 +15,7 @@ module.exports = function createFriendQueryRequest(response, tweets) {
       console.log('There was an error retreiving friend boolean: ', err);
       return Promise.reject();
     });
+  // ----------------------------------------------------------------------------------------
+
+
 };
