@@ -30,7 +30,7 @@ app.post('/tweets/events', (request, response) => { // will be to Nick's service
 
 app.get('/user', (request, response) => { // will be to Aygerm
   console.log('Get to /user successful');
-  response.json(!!Math.round(Math.random()));
+  response.json({ results: [true, false, false, true, true] });
 });
 
 app.get('/feed/:userId', (request, response) => {

@@ -28,9 +28,9 @@ module.exports = function createFriendQueryRequest(response, tweets) {
 
   return getFriendlyBoolean(response.data.user_id, arrayOfTweetIds, arrayOfIsAds)
     .then((res) => {
-      // creates an array of generateInteraction requests using the res object recieved back from Social Graph Service
+      // creates an array of generateInteraction requests using res.data from Social Graph Service
       return Promise.all(arrayOfTweetIds.map((tweetId, index) => {
-        return generateInteraction(response.data.user_id, tweetId, arrayOfIsAds[index], res.results[index]);
+        return generateInteraction(response.data.user_id, tweetId, arrayOfIsAds[index], res.data.results[index]);
       }))
         .then((res) => {
           return Promise.resolve();
