@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const getFriendlyBoolean = (userId, arrayOfTweetIds, isAd) => {
+const getFriendlyBoolean = (userId, arrayOfTweetIds, arrayOfIsAds) => {
   return axios.get('http://127.0.0.1:3000/user', { // WILL PUT AYGERIM'S SERVICE HERE
     params: {
       user_id: userId,
