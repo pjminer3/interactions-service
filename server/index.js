@@ -7,6 +7,11 @@ const dotenv = require('dotenv');
 
 const getFeed = require('./helperFunctions/getFeed');
 
+const getFeed2 = require('./helperFunctions2/getFeed2');
+const generateInteraction2 = require('./helperFunctions2/generateInteraction2');
+const addIntsToDB2 = require('./helperFunctions2/addIntsToDB2');
+
+
 dotenv.config();
 
 
@@ -46,7 +51,7 @@ app.get('/feed/:userId', (request, response) => {
   });
 });
 
-
+// Endpoint '/testinput' used to simulate full app function by interacting with local server
 app.post('/testinput', (request, response) => {
   getFeed() // returns a promise
     .then((res) => {
@@ -55,6 +60,28 @@ app.post('/testinput', (request, response) => {
     .catch((err) => {
       response.json();
     });
+});
+
+// Endpoint '/testinput2' used to simulate full app function by calling helper functions
+
+app.post('/testinput2', (request, response) => {
+  const feed = getFeed2();
+  const interactions = generateInteraction2(feed);
+  
+  if (interactions.length > 0) {
+    // add interactions to the database
+    Promise.all(interactions.map((tweet) => {
+      return addIntsToDB2(tweet.user_id, tweet.tweet_id, tweet.isad, tweet.friendly);
+    }))
+      .then((res) => {
+        response.json();
+      })
+      .catch((err) => {
+        console.log('There was an error add interactions to the database');
+      });
+  } else {
+    response.json();
+  }
 });
 
 // -------------------------- END OF TESTING PORTION CODE -----------------------------------------
