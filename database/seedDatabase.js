@@ -64,7 +64,7 @@ function createBatchInsert() {
 }
 
 function createOneMillionEntries(int = 0) {
-  if (int === 1000000) {
+  if (int === 100000) {
     console.log('Creation complete');
     return;
   }
@@ -78,7 +78,7 @@ function createOneMillionEntries(int = 0) {
 }
 
 // uncomment the below line to generate the data
-// createOneMillionEntries(0);
+createOneMillionEntries(0);
 
 // creates 1 feed request
 axios.post('http://127.0.0.1:3000/testinput')
