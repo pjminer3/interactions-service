@@ -1,5 +1,7 @@
 // const nr = require('newrelic');
 
+const createLogin = require('./../queue/logins');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -65,23 +67,26 @@ app.post('/testinput', (request, response) => {
 // Endpoint '/testinput2' used to simulate full app function by calling helper functions
 
 app.post('/testinput2', (request, response) => {
-  const feed = getFeed2();
-  const interactions = generateInteraction2(feed);
+  createLogin();
+  response.json();
   
-  if (interactions.length > 0) {
-    // add interactions to the database
-    Promise.all(interactions.map((tweet) => {
-      return addIntsToDB2(tweet.user_id, tweet.tweet_id, tweet.isad, tweet.friendly);
-    }))
-      .then((res) => {
-        response.json();
-      })
-      .catch((err) => {
-        console.log('There was an error add interactions to the database');
-      });
-  } else {
-    response.json();
-  }
+  // const feed = getFeed2();
+  // const interactions = generateInteraction2(feed);
+  
+  // if (interactions.length > 0) {
+  //   // add interactions to the database
+  //   Promise.all(interactions.map((tweet) => {
+  //     return addIntsToDB2(tweet.user_id, tweet.tweet_id, tweet.isad, tweet.friendly);
+  //   }))
+  //     .then((res) => {
+  //       response.json();
+  //     })
+  //     .catch((err) => {
+  //       console.log('There was an error add interactions to the database');
+  //     });
+  // } else {
+  //   response.json();
+  // }
 });
 
 // -------------------------- END OF TESTING PORTION CODE -----------------------------------------
