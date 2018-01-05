@@ -5,19 +5,24 @@ const addIntsToDB2 = require('./../server/helperFunctions2/addIntsToDB2');
 
 const queue = kue.createQueue();
 
+queue.on('connect', () => {
+  console.log('Connected to Redis Queue');
+});
+
 // function for creating 'login' jobs
 const createUserLogin = () => {
   const job = queue.create('login');
-  job.attempts(5)
+  job.attempts(1000)
+    .priority('high')
     .save((err) => {
       if (!err) {
-        console.log(job.id);
+        // console.log(job.id);
       }
     });
 };
 
-queue.process('login', (job, done) => {
-  console.log(`Login and interactions for id ${job.id} is done`);
+queue.process('login', 1000, (job, done) => {
+  // console.log(`Login and interactions for id ${job.id} is done`);
 
   const feed = getFeed2();
   const interactions = generateInteraction2(feed);
@@ -31,7 +36,7 @@ queue.process('login', (job, done) => {
         done();
       })
       .catch((err) => {
-        console.log('There was an error add interactions to the database');
+        // console.log('There was an error adding interactions to the database');
       });
   } else {
     done();
