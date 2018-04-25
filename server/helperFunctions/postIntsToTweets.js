@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const postIntsToTweets = (userId, tweetId) => {
-  return axios.post('http://127.0.0.1:3000/tweets/events', { // TODO: CHANGE THIS TO CONNECT WITH NICK'S SERVICE
+  return axios.post('http://127.0.0.1:3000/tweets/events', { // Tweet service
     user_id: userId,
     tweet_id: tweetId,
   })

@@ -1,17 +1,11 @@
-const { client } = require('./../../database/index'); // THIS CLIENT WILL EVENTUALLY NEED TO LEAD TO MY EC2 INSTANCE
+const { client } = require('./../../database/index');
 const postIntsToTweets = require('./postIntsToTweets');
 
 const { generateIntrID, generateTimestamp } = require('./dataGeneration');
 
 // function to add a new record to the cassandra DB using once provided with a:
 // userID, tweetID, isAd boolean, and friendly boolean
-const addIntsToDB = (userId, tweetId, isAd, friendly) => {
-  const intrId = generateIntrID();
-  const intrTime = generateTimestamp();
-
-  const query = 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)';
-  const params = [intrId, userId, tweetId, isAd, friendly, intrTime];
-
+const createCassandraRecord = (query, params, prepareObj) => {
   return client.execute(query, params, { prepare: true })
     .then((result) => {
       console.log('Row updated in cassandra');
@@ -20,6 +14,16 @@ const addIntsToDB = (userId, tweetId, isAd, friendly) => {
     .catch((err) => {
       console.log('Error with adding record to DB: ', err);
     });
+}
+
+const addIntsToDB = (userId, tweetId, isAd, friendly) => {
+  const intrId = generateIntrID();
+  const intrTime = generateTimestamp();
+
+  const query = 'INSERT INTO interactions (intr_id, user_id, tweet_id, isad, friendly_intr, intr_time) VALUES (?, ?, ?, ?, ?, ?)';
+  const params = [intrId, userId, tweetId, isAd, friendly, intrTime];
+
+  return createCassandraRecord(query, params, { prepare: true });
 };
 
 module.exports = addIntsToDB;

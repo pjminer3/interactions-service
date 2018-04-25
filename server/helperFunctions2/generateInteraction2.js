@@ -1,13 +1,5 @@
 const generateInteraction = (feed) => {
   const interactions = [];
-  // user_id: user,
-  // tweets: [
-  //   { tweet_id: '1', isad: false, friendly: false },
-  //   { tweet_id: '2', isad: true, friendly: true },
-  //   { tweet_id: '3', isad: true, friendly: true },
-  //   { tweet_id: '4', isad: false, friendly: false },
-  //   { tweet_id: '5', isad: false, friendly: false },
-  // ],
   
   feed.tweets.forEach((tweet) => {
     const prob = Math.random();

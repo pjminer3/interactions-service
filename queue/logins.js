@@ -9,7 +9,7 @@ queue.on('connect', () => {
   console.log('Connected to Redis Queue');
 });
 
-const addInteractionsToDatabase(interactions) => {
+const addInteractionsToDatabase = (interactions) => {
   Promise.all(interactions.map((tweet) => {
     return addIntsToDB2(tweet.user_id, tweet.tweet_id, tweet.isad, tweet.friendly);
   }))

@@ -1,5 +1,3 @@
-// const nr = require('newrelic');
-
 const queue = require('./../queue/logins');
 
 const express = require('express');
@@ -13,7 +11,6 @@ const getFeed2 = require('./helperFunctions2/getFeed2');
 const generateInteraction2 = require('./helperFunctions2/generateInteraction2');
 const addIntsToDB2 = require('./helperFunctions2/addIntsToDB2');
 
-
 dotenv.config();
 
 
@@ -23,19 +20,19 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// --------------------- the below endpoints are for testing purposes only -----------------------
+// --------------------- the below endpoints are for testing purposes only ----------------------- //
 
 // the below endpoint is used to test containerization
 app.get('/', (request, response) => {
-  response.send('-v mounts a volume on the CONTAINER - no change is needed on the actual image... Also, I dont even have nodemon running... jk, nodemon IS RUNNING');
+  response.send('Container is running');
 });
 
-app.post('/tweets/events', (request, response) => { // will be to Nick's service
+app.post('/tweets/events', (request, response) => { // Tweets service
   console.log('Post to tweets successful');
   response.json();
 });
 
-app.get('/user', (request, response) => { // will be to Aygerm
+app.get('/user', (request, response) => { // User service
   console.log('Get to /user successful');
   response.json({ results: [true, false, false, true, true] });
 });
