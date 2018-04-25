@@ -9,35 +9,37 @@ queue.on('connect', () => {
   console.log('Connected to Redis Queue');
 });
 
-// function for creating 'login' jobs
+const addInteractionsToDatabase(interactions) => {
+  Promise.all(interactions.map((tweet) => {
+    return addIntsToDB2(tweet.user_id, tweet.tweet_id, tweet.isad, tweet.friendly);
+  }))
+    .then((res) => {
+      done();
+    })
+    .catch((err) => {
+      console.log('There was an error adding interactions to the database');
+    });
+}
+
 const createUserLogin = () => {
   const job = queue.create('login');
   job.attempts(1000)
     .priority('high')
     .save((err) => {
       if (!err) {
-        // console.log(job.id);
+        console.log(job.id);
       }
     });
 };
 
 queue.process('login', 1000, (job, done) => {
-  // console.log(`Login and interactions for id ${job.id} is done`);
+  console.log(`Login and interactions for id ${job.id} is done`);
 
   const feed = getFeed2();
   const interactions = generateInteraction2(feed);
   
   if (interactions.length > 0) {
-    // add interactions to the database
-    Promise.all(interactions.map((tweet) => {
-      return addIntsToDB2(tweet.user_id, tweet.tweet_id, tweet.isad, tweet.friendly);
-    }))
-      .then((res) => {
-        done();
-      })
-      .catch((err) => {
-        // console.log('There was an error adding interactions to the database');
-      });
+    addInteractionsToDatabase(interactions);
   } else {
     done();
   }
